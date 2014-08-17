@@ -1,5 +1,5 @@
 import wx
-import os
+import os.path
 
 class FileMenu(object):
     """

@@ -1,5 +1,4 @@
 import wx
-import os.path
 import menu
 
 class Textpad(wx.Frame):
@@ -15,6 +14,9 @@ class Textpad(wx.Frame):
         self.create_panel_components()
         self.create_menu_components()
         self.Show()
+        self.update_list = [""]
+        self.redo_list = [""]
+        self.max_count = 10
 
     def create_panel_components(self):
         """
@@ -23,6 +25,19 @@ class Textpad(wx.Frame):
                          text control. 
         """
         self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
+        self.Bind(wx.EVT_TEXT, self.text_changed, self.control)
+    
+    def text_changed(self, event):
+        """
+            Description: call back function for text change 
+                         event on the editor
+            input_param: event - text change event
+            input_type: event - Event instance
+            
+        """
+        if len(self.update_list) > self.max_count:
+            self.update_list = self.update_list[1:self.max_count]
+        self.update_list.append(self.control.GetValue())
 
     def create_menu_components(self):
         """
@@ -36,6 +51,9 @@ class Textpad(wx.Frame):
     def SetTitle(self, title):
         """
             Description: Sets the Frame's Tile with the give value
+            input_param: title - Title string to set on the window
+            input_type: title - string
+            
         """
         super(Textpad, self).SetTitle('Editor %s'%title)
 
