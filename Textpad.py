@@ -11,22 +11,69 @@ class Textpad(wx.Frame):
             Description: Initialize the Frame class
         """
         super(Textpad, self).__init__(None, size=(800,400))
-        self.create_panel_components()
-        self.create_menu_components()
+        self.dirname = '.'
+        self.filename = "New File.txt"
         self.Show()
-        self.update_list = [""]
-        self.redo_list = [""]
+        self.update_list = []
+        self.redo_list = []
         self.max_count = 10
+        self.content_saved = True
+        
+        self.file_menu = None
+        self.edit_menu = None
+        
+        # call the menu and other component creation functions
+        self.create_editor_components()
+        self.register_event_callbacks()
 
-    def create_panel_components(self):
+    def create_editor_components(self):
         """
-            Description: Create Frame's Panel components. 
-                         In this case it is just a simple multiline 
-                         text control. 
+            Description: Create all the components(TextArea, Menus,etc...)
+                          for the editor
+                         
         """
         self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
+        menu.set_menu_bar(self)
+        self.CreateStatusBar()
+        self.SetTitle("New File.txt")
+        
+    def register_event_callbacks(self):
+        """
+            Description:  Registers the editor component for 
+                         required event callbacks
+            
+        """
         self.Bind(wx.EVT_TEXT, self.text_changed, self.control)
-    
+        self.Bind(wx.EVT_CLOSE, self.window_close, self)
+
+    def window_close(self, event):
+        """
+            Description: Window close event handling function
+            input_param: event - close Event 
+            input_type: Event instance
+
+        """
+        
+        if event.CanVeto() and not self.content_saved:
+            close_dialog = wx.MessageDialog(self, 
+                            "Do you want to save before closing?",
+                            "Save Check",
+                            wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION)
+            return_value = close_dialog.ShowModal()
+            window_closed = False
+            if return_value == wx.ID_YES:
+                self.file_menu.save_file(event)
+                window_closed = True
+                self.Destroy()
+            elif return_value == wx.ID_NO:
+                window_closed = True
+                self.Destroy()
+            elif return_value == wx.ID_CANCEL:
+                pass
+            event.Veto(True)
+        else:
+            self.Destroy()
+     
     def text_changed(self, event):
         """
             Description: call back function for text change 
@@ -35,18 +82,13 @@ class Textpad(wx.Frame):
             input_type: event - Event instance
             
         """
-        if len(self.update_list) > self.max_count:
-            self.update_list = self.update_list[1:self.max_count]
+        if not self.content_saved:
+           if len(self.update_list) > self.max_count:
+            del self.update_list[0]
+        else:
+            self.SetTitle(self.filename + "*")
+            self.content_saved = False
         self.update_list.append(self.control.GetValue())
-
-    def create_menu_components(self):
-        """
-            Description:  Create all the menu components, 
-                          such as top menu and status bar. 
-        """
-        menu.set_menu_bar(self)
-        self.CreateStatusBar()
-        self.SetTitle("New File.txt")
 
     def SetTitle(self, title):
         """
@@ -58,6 +100,6 @@ class Textpad(wx.Frame):
         super(Textpad, self).SetTitle('Editor %s'%title)
 
 if __name__ == '__main__':
-	app = wx.App()
-	frame = Textpad()
-	app.MainLoop()
+    app = wx.App()
+    frame = Textpad()
+    app.MainLoop()

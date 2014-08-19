@@ -1,5 +1,4 @@
 import wx
-import os
 
 class EditMenu(object):
     """
@@ -23,6 +22,7 @@ class EditMenu(object):
         """
         if self.frame.control.CanCut():
             self.frame.control.Cut()
+        self.frame.content_saved = False
     
     def copy_text(self, event):
         """
@@ -45,6 +45,7 @@ class EditMenu(object):
         """
         if self.frame.control.CanPaste():
             self.frame.control.Paste()
+        self.frame.content_saved = False
     
     def delete_text(self, event):
         """
@@ -55,6 +56,7 @@ class EditMenu(object):
         """
         select_range = self.frame.control.GetSelection()
         self.frame.control.Remove(select_range[0], select_range[1])
+        self.frame.content_saved = False
     
     def undo_text(self, event):
         """
@@ -63,17 +65,17 @@ class EditMenu(object):
             input_type: Event instance
 
         """
-        total_updates = len(self.frame.update_list)-1
-        if total_updates > 0:
-            last_update = self.frame.update_list[total_updates-1]
-            self.frame.control.ChangeValue(last_update)
-            
+        if self.frame.update_list:
             if len(self.frame.redo_list) > self.frame.max_count:
-                self.frame.redo_list = self.frame.redo_list[1:self.frame.max_count]
-            self.frame.redo_list.append(self.frame.update_list[total_updates])
+                del self.frame.redo_list[0]
+            self.frame.redo_list.append(self.frame.update_list.pop())
             
-            self.frame.update_list = self.frame.update_list[:total_updates]
+        self.frame.control.ChangeValue(
+                  self.frame.update_list[-1] if self.frame.update_list 
+                  else ""
+        )
         self.frame.control.SetInsertionPointEnd()
+        self.frame.content_saved = False
     
     def redo_text(self, event):
         """
@@ -82,8 +84,17 @@ class EditMenu(object):
             input_type: Event instance
 
         """
-        total_updates = len(self.frame.redo_list)-1
-        self.frame.control.ChangeValue(self.frame.redo_list[total_updates])
-        self.frame.control.SetInsertionPointEnd()
-        self.frame.text_changed(None)
+        if self.frame.redo_list:
+            self.frame.control.ChangeValue(self.frame.redo_list.pop())
+            self.frame.control.SetInsertionPointEnd()
+            self.frame.text_changed(None)
+        self.frame.content_saved = False
+    
+    def select_all_text(self, event):
+        """
+            Description: Selects all the text in the editor
+            input_param: event - Select All Event 
+            input_type: Event instance
 
+        """
+        self.frame.control.SelectAll()
