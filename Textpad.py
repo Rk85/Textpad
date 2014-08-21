@@ -13,7 +13,6 @@ class Textpad(wx.Frame):
         super(Textpad, self).__init__(None, size=(800,400))
         self.dirname = '.'
         self.filename = "New File.txt"
-        self.Show()
         self.update_list = []
         self.redo_list = []
         self.max_count = 10
@@ -25,6 +24,7 @@ class Textpad(wx.Frame):
         # call the menu and other component creation functions
         self.create_editor_components()
         self.register_event_callbacks()
+        self.Show()
 
     def create_editor_components(self):
         """
@@ -35,7 +35,7 @@ class Textpad(wx.Frame):
         self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
         menu.set_menu_bar(self)
         self.CreateStatusBar()
-        self.SetTitle("New File.txt")
+        self.SetTitle(self.filename)
         
     def register_event_callbacks(self):
         """
@@ -70,7 +70,7 @@ class Textpad(wx.Frame):
                 self.Destroy()
             elif return_value == wx.ID_CANCEL:
                 pass
-            event.Veto(True)
+            event.Veto(window_closed)
         else:
             self.Destroy()
      

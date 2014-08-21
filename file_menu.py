@@ -72,6 +72,8 @@ class FileMenu(object):
                 textfile.close()
         self.frame.content_saved = True
         self.frame.SetTitle(self.frame.filename)
+        self.frame.update_list = []
+        self.frame.redo_list = []
     
     def save_file(self, event):
         """

@@ -108,6 +108,13 @@ MENUS = [
                     'call_back': 'select_all_text',
                     'display': True,
                     'name': 'Select All\tCtrl+A'
+                },
+                {
+                    'id': wx.ID_REPLACE,
+                    'help_text': 'Replace the text in the editor',
+                    'call_back': 'replace_text',
+                    'display': True,
+                    'name': 'Replace\tCtrl+H'
                 }
             ],
             'display_order': 2,
