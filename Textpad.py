@@ -83,8 +83,8 @@ class Textpad(wx.Frame):
             
         """
         if not self.content_saved:
-           if len(self.update_list) > self.max_count:
-            del self.update_list[0]
+            if len(self.update_list) > self.max_count:
+                del self.update_list[0]
         else:
             self.SetTitle(self.filename + "*")
             self.content_saved = False

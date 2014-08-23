@@ -1,4 +1,5 @@
 import wx
+import re
 
 class EditMenu(object):
     """
@@ -114,9 +115,7 @@ class EditMenu(object):
                             self.replace_data,
                             'Replace Text',
                             wx.FR_REPLACEDIALOG|
-                            wx.FR_NOUPDOWN|
-                            wx.FR_NOMATCHCASE|
-                            wx.FR_NOWHOLEWORD
+                            wx.FR_NOUPDOWN
                          )
         self.find_replace_register_events(replace_dialog)
         return_value = replace_dialog.ShowModal()
@@ -177,13 +176,21 @@ class EditMenu(object):
         """
         editor_text = self.frame.control.GetValue()
         if editor_text:
-            find_string = self.replace_data.GetFindString()
-            index = editor_text.find(find_string, start_index)
-            if index != -1 :
-                self.frame.control.SetSelection(index, index+len(find_string))
-                self.start_search_index = index+len(find_string)
+            flags = self.replace_data.GetFlags()
+            find_text = self.replace_data.GetFindString()
+            # If match by word option is set on the dialog
+            pattern = "\\b" + find_text + "\\b" if flags & 2 else find_text
+            match = re.search(pattern, 
+                 editor_text[self.start_search_index:], 
+                 flags=0 if flags & 4 else re.I
+            )
+            if match:
+                start = self.start_search_index + match.start()
+                end = self.start_search_index + match.end()
+                self.frame.control.SetSelection(start, end)
+                self.start_search_index = self.start_search_index + end
     
-    def replace_string(self, max_occurence=None):
+    def replace_string(self, max_occurence=0):
         """
             Description: Replaces the searching string in the editor 
                          when a match is found and for given max occurence
@@ -195,11 +202,16 @@ class EditMenu(object):
         """
         editor_text = self.frame.control.GetValue()
         if editor_text:
-            find_string = self.replace_data.GetFindString()
-            replace_string = self.replace_data.GetReplaceString()
-            if max_occurence:
-                editor_text = editor_text.replace(find_string, replace_string, max_occurence)
-            else:
-                editor_text = editor_text.replace(find_string, replace_string)
-            self.frame.control.SetValue(editor_text)
+            flags = self.replace_data.GetFlags()
+            find_text = self.replace_data.GetFindString()
+            replace_text = self.replace_data.GetReplaceString()
+            # If match by word option is set on the dialog
+            pattern = "\\b" + find_text + "\\b" if flags & 2 else find_text
+            new_text = re.sub(pattern, 
+                 replace_text,
+                 editor_text, 
+                 count=max_occurence,
+                 flags=0 if flags & 4 else re.I
+            )
+            self.frame.control.SetValue(new_text)
 
