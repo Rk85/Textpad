@@ -52,6 +52,7 @@ class FileMenu(object):
         self.frame.control.Clear()
         self.frame.filename = "New File.txt"
         self.frame.SetTitle(self.frame.filename)
+        self.frame.content_saved = True
         
     def open_file(self, event):
         """

@@ -20,6 +20,7 @@ class Textpad(wx.Frame):
         
         self.file_menu = None
         self.edit_menu = None
+        self.view_menu = None
         
         # call the menu and other component creation functions
         self.create_editor_components()
@@ -34,7 +35,7 @@ class Textpad(wx.Frame):
         """
         self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
         menu.set_menu_bar(self)
-        self.CreateStatusBar()
+        self.status_bar = self.CreateStatusBar()
         self.SetTitle(self.filename)
         
     def register_event_callbacks(self):
@@ -43,8 +44,10 @@ class Textpad(wx.Frame):
                          required event callbacks
             
         """
-        self.Bind(wx.EVT_TEXT, self.text_changed, self.control)
-        self.Bind(wx.EVT_CLOSE, self.window_close, self)
+        self.control.Bind(wx.EVT_TEXT, self.text_changed)
+        self.control.Bind(wx.EVT_LEFT_UP, self.show_status_text)
+        self.control.Bind(wx.EVT_KEY_UP, self.show_status_text)
+        self.Bind(wx.EVT_CLOSE, self.window_close)
 
     def window_close(self, event):
         """
@@ -97,7 +100,15 @@ class Textpad(wx.Frame):
             input_type: title - string
             
         """
-        super(Textpad, self).SetTitle('Editor %s'%title)
+        super(Textpad, self).SetTitle('TextPad - %s'%title)
+    
+    def show_status_text(self, event):
+        """
+        """
+        if self.status_bar.IsShown():
+            start_pos, end_pos = self.control.GetSelection()
+            col, line = self.control.PositionToXY(end_pos)
+            self.status_bar.SetStatusText("line no :{0}, col no:{1}".format(line+1, col+1))
 
 if __name__ == '__main__':
     app = wx.App()

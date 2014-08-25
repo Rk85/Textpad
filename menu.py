@@ -1,6 +1,10 @@
 import wx
 from file_menu import FileMenu
 from edit_menu import EditMenu
+from view_menu import ViewMenu
+
+VIEW_STATUS_BAR_ID = 100001
+VIEW_FONT_ID = 100002
 
 # menu list for the textpad
 MENUS = [
@@ -120,7 +124,33 @@ MENUS = [
             'display_order': 2,
             'display': True
          
-       }
+       },
+       {
+            'name': 'View',
+            'call_back_class': ViewMenu,
+            'frame_attribute': 'view_menu',
+            'sub_menus': [
+                {
+                    'id': VIEW_STATUS_BAR_ID,
+                    'help_text': 'Shows/Hides the Status Bar in the editor',
+                    'call_back': 'view_status_bar',
+                    'display': True,
+                    'name': 'Show Status Bar',
+                    'kind_type': wx.ITEM_CHECK,
+                    'kind_value': True
+                },
+                {
+                    'id': VIEW_FONT_ID,
+                    'help_text': 'Enables the user to change the font',
+                    'call_back': 'view_font_change',
+                    'display': True,
+                    'name': 'Font'
+                }
+            ],
+            'display_order': 3,
+            'display': True
+      }
+         
 ]
 
 def set_menu_bar(frame):
@@ -142,27 +172,74 @@ def set_menu_bar(frame):
         menu = wx.Menu()
         menu_object = menu_group['call_back_class'](frame)
         setattr(frame, menu_group['frame_attribute'], menu_object)
-        
-        # Traverse the submenu items and append it to main menu
-        # Assign event call back funtions for each menu item 
-        for sub_menu_item in menu_group.get('sub_menus', []):
-            if not sub_menu_item:
-                menu.AppendSeparator()
-            else:
-                menu_item = wx.MenuItem(menu, 
-                                         sub_menu_item['id'], 
-                                         sub_menu_item['name'],
-                                         sub_menu_item['help_text']
-                            )
-                #menu_item.SetBitmap(wx.Bitmap('exit.png'))
-                menu.AppendItem(menu_item)
-                frame.Bind(
-                    wx.EVT_MENU, 
-                    getattr(menu_object, 
-                             sub_menu_item['call_back'], 
-                             None
-                    ), 
-                    menu_item
-                )
+        create_sub_menus(menu,
+                         menu_group['sub_menus']
+        )
+        register_menu_call_backs(frame,
+                              menu.GetMenuItems(),
+                              menu_group['sub_menus'],
+                              menu_object
+        ) 
         menu_bar.Append(menu, menu_group['name'])
     frame.SetMenuBar(menu_bar)
+
+def create_sub_menus(menu, sub_menu_list):
+    """
+        Description: Creates all the required submenus under 
+                     the given menu item 
+        input_param: menu - Main menu to which the new sub-menus
+                     need to be attached
+        input_type: menu - wx.Menu Instance
+        input_param: sub_menu_list - Details of the Sub Menus
+                     that need to be created
+        input_type: sub_menu_list - list of dictionary
+        
+    """
+    # Traverse the submenu items and append it to main menu
+    # Assign event call back funtions for each menu item 
+    for sub_menu_item in sub_menu_list:
+        if not sub_menu_item:
+            menu.AppendSeparator()
+        else:
+            menu_item = wx.MenuItem(menu,
+                          sub_menu_item['id'],
+                          sub_menu_item['name'],
+                          sub_menu_item['help_text'],
+                          sub_menu_item.get('kind_type', wx.ITEM_NORMAL)
+                        )
+            #menu_item.SetBitmap(wx.Bitmap('exit.png'))
+            menu.AppendItem(menu_item)
+            if menu_item.IsCheckable():
+                menu_item.Check(sub_menu_item.get('kind_value', False))
+
+def register_menu_call_backs(frame,
+                             menu_items,
+                             sub_menu_details,
+                             menu_object, 
+                            ):
+    """
+        Description: Registers the Menu Call back event for  
+                     each SubMenu that is created
+        input_param: frame - Main Editor frame window
+        input_type: frame - wx.Frame
+        input_param: menu_items - list of MenuItem to which
+                     event call back need to be registered
+        input_type: menu_items - list of wx.MenuItem Instance
+        input_param: sub_menu_list - Details of the Sub Menus
+                     that is being registered for events
+        input_type: sub_menu_list - list of dictionary
+        input_param: menu_object - Menu class instance which is
+                     having call back functions
+        input_type: menu_object - Class Instance
+        
+    """
+    for menu_item in menu_items:
+        for sub_menu_detail in sub_menu_details:
+            if menu_item.GetId() == sub_menu_detail.get('id'):
+                frame.Bind(wx.EVT_MENU,
+                        getattr(menu_object,
+                              sub_menu_detail['call_back'],
+                              None
+                        ),
+                        menu_item
+                )
