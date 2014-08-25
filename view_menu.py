@@ -38,3 +38,33 @@ class ViewMenu(object):
         if font_dialog.ShowModal() == wx.ID_OK:
             font_details = font_dialog.GetFontData().GetChosenFont()
             self.frame.control.SetFont(font_details)
+    
+    def view_about_info(self, event):
+        """
+            Description: Allows the user to change the font on 
+                         the editor
+            input_param: event - Menu Event 
+            input_type: Event instance
+
+        """
+        info = wx.AboutDialogInfo()
+        description = """This application helps the user to
+create/edit the text documents"""
+        licence = """TextPad is free software; you can redistribute 
+it and/or modify it under the terms of the GNU General Public License as 
+published by the Free Software Foundation; either version 2 of the License, 
+or (at your option) any later version.
+
+File Hunter is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+See the GNU General Public License for more details."""
+        info.SetIcon(wx.Icon('icons/about.png', wx.BITMAP_TYPE_PNG))
+        info.SetName('TextPad')
+        info.SetVersion('1.0')
+        info.SetDescription(description)
+        info.SetCopyright('(C) 2014 - 2014 Radhakrishnan Raji rachandkrishnan@gmail.com')
+        info.SetLicence(licence)
+        info.AddDeveloper('Radhakrishnan Raji')
+        wx.AboutBox(info)
+

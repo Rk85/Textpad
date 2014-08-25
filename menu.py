@@ -3,8 +3,9 @@ from file_menu import FileMenu
 from edit_menu import EditMenu
 from view_menu import ViewMenu
 
-VIEW_STATUS_BAR_ID = 100001
-VIEW_FONT_ID = 100002
+VIEW_STATUS_BAR_ID = 300001
+VIEW_FONT_ID = 300002
+VIEW_ABOUT_ID = 300003
 
 # menu list for the textpad
 MENUS = [
@@ -18,14 +19,18 @@ MENUS = [
                     'help_text': 'Creats a new file',
                     'call_back': 'new_file',
                     'display': True,
-                    'name': 'New'
+                    'name': 'New',
+                    'tool_menu': True,
+                    'icon_name': 'new.png'
                 },
                 {
                     'id': wx.ID_OPEN,
                     'help_text': 'Open a new file',
                     'call_back': 'open_file',
                     'display': True,
-                    'name': 'Open'
+                    'name': 'Open',
+                    'tool_menu': True,
+                    'icon_name': 'open.png'
                 },
                 {},
                 {
@@ -34,7 +39,9 @@ MENUS = [
                     'call_back': 'save_file',
                     'display_order' : 2,
                     'display': True,
-                    'name': 'Save'
+                    'name': 'Save',
+                    'tool_menu': True,
+                    'icon_name': 'save.png'
                 },
                 {
                     'id': wx.ID_SAVEAS,
@@ -67,21 +74,27 @@ MENUS = [
                     'help_text': 'Cuts the selected text',
                     'call_back': 'cut_text',
                     'display': True,
-                    'name': 'Cut'
+                    'name': 'Cut',
+                    'tool_menu': True,
+                    'icon_name': 'cut.png'
                 },
                 {
                     'id': wx.ID_COPY,
                     'help_text': 'Copies the selected text',
                     'call_back': 'copy_text',
                     'display': True,
-                    'name': 'Copy'
+                    'name': 'Copy',
+                    'tool_menu': True,
+                    'icon_name': 'copy.png'
                 },
                 {
                     'id': wx.ID_PASTE,
                     'help_text': 'Paste the selected text',
                     'call_back': 'paste_text',
                     'display': True,
-                    'name': 'Paste'
+                    'name': 'Paste',
+                    'tool_menu': True,
+                    'icon_name': 'paste.png'
                 },
                 {
                     'id': wx.ID_DELETE,
@@ -145,6 +158,13 @@ MENUS = [
                     'call_back': 'view_font_change',
                     'display': True,
                     'name': 'Font'
+                },
+                {
+                    'id': VIEW_ABOUT_ID,
+                    'help_text': 'shows About Window',
+                    'call_back': 'view_about_info',
+                    'display': True,
+                    'name': 'About'
                 }
             ],
             'display_order': 3,
@@ -243,3 +263,43 @@ def register_menu_call_backs(frame,
                         ),
                         menu_item
                 )
+
+def set_tool_bar(frame):
+    """
+        Description: Sets the Toolbar items on the UI 
+                     with the given frame object
+        input_param: frame - frame to which tool bar should be attached
+        input_type: frame - wx.Frame instance
+        
+    """
+    toolbar = wx.ToolBar(frame.toolbar_panel, 0, 
+                         style=wx.TB_HORIZONTAL | wx.NO_BORDER
+    )
+    for menu_group in sorted(
+                  MENUS, key=lambda x: x['display_order']
+                 ):
+        handler_instance = getattr(frame, 
+                                   menu_group['frame_attribute'], 
+                                   None
+                           )
+        if handler_instance:
+            for sub_menu in menu_group.get('sub_menus', []):
+                if sub_menu.get('tool_menu'):
+                    toolbar.AddSimpleTool(sub_menu['id'], 
+                                       wx.Bitmap('icons/' + sub_menu['icon_name'], 
+                                                   wx.BITMAP_TYPE_PNG), 
+                                       sub_menu['name'])
+                    frame.Bind(wx.EVT_TOOL, 
+                               getattr(handler_instance, 
+                                        sub_menu['call_back'], 
+                                        None),
+                               id=sub_menu['id'])
+        toolbar.AddSeparator()
+    toolbar.Realize()
+    
+    # Set the Sizer for the ToolBar
+    vbox = wx.BoxSizer(wx.VERTICAL)
+    hbox = wx.BoxSizer(wx.HORIZONTAL)
+    hbox.Add(toolbar, 0, wx.EXPAND)
+    vbox.Add(hbox, 0, flag=wx.EXPAND, border=5)
+    frame.toolbar_panel.SetSizer(vbox)

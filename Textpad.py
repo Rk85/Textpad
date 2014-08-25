@@ -22,10 +22,23 @@ class Textpad(wx.Frame):
         self.edit_menu = None
         self.view_menu = None
         
+        # Create the panels for our components to stay
+        self.toolbar_panel = wx.Panel(self, -1)
+        self.editor_panel = wx.Panel(self, -1)
+        
         # call the menu and other component creation functions
         self.create_editor_components()
         self.register_event_callbacks()
+        
+        # Create the sizer and add our panels into that
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(self.toolbar_panel, 0, flag=wx.EXPAND)
+        sizer.Add(self.editor_panel, 1, flag=wx.EXPAND|wx.BOTTOM)
+        self.SetSizer(sizer)
+        
         self.Show()
+        
+        
 
     def create_editor_components(self):
         """
@@ -33,8 +46,18 @@ class Textpad(wx.Frame):
                           for the editor
                          
         """
-        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
         menu.set_menu_bar(self)
+        menu.set_tool_bar(self)
+        
+        # Create a sizer for our editor text area
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
+        self.control = wx.TextCtrl(self.editor_panel, style=wx.TE_MULTILINE)
+        hbox.Add(self.control, 1, flag=wx.EXPAND)
+        
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        vbox.Add(hbox, 1, flag=wx.EXPAND)
+        self.editor_panel.SetSizer(vbox)
+        
         self.status_bar = self.CreateStatusBar()
         self.SetTitle(self.filename)
         
