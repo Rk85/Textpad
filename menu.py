@@ -3,9 +3,9 @@ from file_menu import FileMenu
 from edit_menu import EditMenu
 from view_menu import ViewMenu
 
-VIEW_STATUS_BAR_ID = 300001
-VIEW_FONT_ID = 300002
-VIEW_ABOUT_ID = 300003
+VIEW_STATUS_BAR_ID = 30001
+VIEW_FONT_ID = 30002
+VIEW_ABOUT_ID = 30003
 
 # menu list for the textpad
 MENUS = [
@@ -272,8 +272,8 @@ def set_tool_bar(frame):
         input_type: frame - wx.Frame instance
         
     """
-    toolbar = wx.ToolBar(frame.toolbar_panel, 0, 
-                         style=wx.TB_HORIZONTAL | wx.NO_BORDER
+    frame.toolbar = wx.ToolBar(frame.toolbar_panel, 0, 
+                         style=wx.TB_HORIZONTAL | wx.NO_BORDER| wx.TB_NODIVIDER
     )
     for menu_group in sorted(
                   MENUS, key=lambda x: x['display_order']
@@ -282,10 +282,11 @@ def set_tool_bar(frame):
                                    menu_group['frame_attribute'], 
                                    None
                            )
+        add_separator = False
         if handler_instance:
             for sub_menu in menu_group.get('sub_menus', []):
                 if sub_menu.get('tool_menu'):
-                    toolbar.AddSimpleTool(sub_menu['id'], 
+                    frame.toolbar.AddSimpleTool(sub_menu['id'], 
                                        wx.Bitmap('icons/' + sub_menu['icon_name'], 
                                                    wx.BITMAP_TYPE_PNG), 
                                        sub_menu['name'])
@@ -294,12 +295,17 @@ def set_tool_bar(frame):
                                         sub_menu['call_back'], 
                                         None),
                                id=sub_menu['id'])
-        toolbar.AddSeparator()
-    toolbar.Realize()
+                    add_separator = True
+        if add_separator:
+            frame.toolbar.AddSimpleTool(wx.ID_ANY, 
+                            wx.Bitmap('icons/separator.png', 
+                                                   wx.BITMAP_TYPE_PNG), 
+                                      '')
+    frame.toolbar.Realize()
     
     # Set the Sizer for the ToolBar
     vbox = wx.BoxSizer(wx.VERTICAL)
     hbox = wx.BoxSizer(wx.HORIZONTAL)
-    hbox.Add(toolbar, 0, wx.EXPAND)
-    vbox.Add(hbox, 0, flag=wx.EXPAND, border=5)
+    hbox.Add(frame.toolbar, 0, wx.EXPAND)
+    vbox.Add(hbox, 0, flag=wx.EXPAND)
     frame.toolbar_panel.SetSizer(vbox)

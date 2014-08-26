@@ -20,11 +20,11 @@ class ViewMenu(object):
             input_type: Event instance
 
         """
-        if self.frame.status_bar.IsShown():
-            self.frame.status_bar.Hide()
+        if self.frame.status_bar and self.frame.status_bar.IsShown():
+            self.frame.status_bar.Destroy()
         else:
-            self.frame.status_bar.Show()
-            self.frame.show_status_text(None)
+            self.frame.status_bar = self.frame.CreateStatusBar()
+            self.frame.show_status_text(event)
     
     def view_font_change(self, event):
         """
@@ -55,7 +55,7 @@ it and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License, 
 or (at your option) any later version.
 
-File Hunter is distributed in the hope that it will be useful, 
+TextPad is distributed in the hope that it will be useful, 
 but WITHOUT ANY WARRANTY; without even the implied warranty of 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 See the GNU General Public License for more details."""

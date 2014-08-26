@@ -17,6 +17,8 @@ class Textpad(wx.Frame):
         self.redo_list = []
         self.max_count = 10
         self.content_saved = True
+        self.status_bar = None
+        self.tool_bar = None
         
         self.file_menu = None
         self.edit_menu = None
@@ -127,11 +129,17 @@ class Textpad(wx.Frame):
     
     def show_status_text(self, event):
         """
+            Description: Show the text on the status bar if
+                         it is visible
+            input_param: event - menu change event
+            input_type: event - Event instance
+            
         """
-        if self.status_bar.IsShown():
+        if self.status_bar and self.status_bar.IsShown():
             start_pos, end_pos = self.control.GetSelection()
             col, line = self.control.PositionToXY(end_pos)
             self.status_bar.SetStatusText("line no :{0}, col no:{1}".format(line+1, col+1))
+        event.Skip()
 
 if __name__ == '__main__':
     app = wx.App()
