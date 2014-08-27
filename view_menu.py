@@ -13,6 +13,20 @@ class ViewMenu(object):
         """
         self.frame = frame
     
+    def view_tool_bar(self, event):
+        """
+            Description: Toggles the Tool Bar Visiblity
+            input_param: event - Menu Event 
+            input_type: Event instance
+
+        """
+        if self.frame.tool_bar and self.frame.tool_bar.IsShown():
+            self.frame.tool_bar.Hide()
+            self.frame.Layout()
+        else:
+            self.frame.tool_bar.Show()
+            self.frame.Layout()
+    
     def view_status_bar(self, event):
         """
             Description: Toggles the Status Bar Visiblity
@@ -21,10 +35,12 @@ class ViewMenu(object):
 
         """
         if self.frame.status_bar and self.frame.status_bar.IsShown():
-            self.frame.status_bar.Destroy()
+            self.frame.status_bar.Hide()
+            self.frame.Layout()
         else:
-            self.frame.status_bar = self.frame.CreateStatusBar()
+            self.frame.status_bar.Show()
             self.frame.show_status_text(event)
+            self.frame.Layout()
     
     def view_font_change(self, event):
         """

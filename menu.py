@@ -6,6 +6,7 @@ from view_menu import ViewMenu
 VIEW_STATUS_BAR_ID = 30001
 VIEW_FONT_ID = 30002
 VIEW_ABOUT_ID = 30003
+VIEW_TOOL_BAR_ID = 30004
 
 # menu list for the textpad
 MENUS = [
@@ -153,6 +154,15 @@ MENUS = [
                     'kind_value': True
                 },
                 {
+                    'id': VIEW_TOOL_BAR_ID,
+                    'help_text': 'Shows/Hides the Tool Bar in the editor',
+                    'call_back': 'view_tool_bar',
+                    'display': True,
+                    'name': 'Show Tool Bar',
+                    'kind_type': wx.ITEM_CHECK,
+                    'kind_value': True
+                },
+                {
                     'id': VIEW_FONT_ID,
                     'help_text': 'Enables the user to change the font',
                     'call_back': 'view_font_change',
@@ -272,7 +282,7 @@ def set_tool_bar(frame):
         input_type: frame - wx.Frame instance
         
     """
-    frame.toolbar = wx.ToolBar(frame.toolbar_panel, 0, 
+    frame.tool_bar = wx.ToolBar(frame.toolbar_panel, 0, 
                          style=wx.TB_HORIZONTAL | wx.NO_BORDER| wx.TB_NODIVIDER
     )
     for menu_group in sorted(
@@ -286,7 +296,7 @@ def set_tool_bar(frame):
         if handler_instance:
             for sub_menu in menu_group.get('sub_menus', []):
                 if sub_menu.get('tool_menu'):
-                    frame.toolbar.AddSimpleTool(sub_menu['id'], 
+                    frame.tool_bar.AddSimpleTool(sub_menu['id'], 
                                        wx.Bitmap('icons/' + sub_menu['icon_name'], 
                                                    wx.BITMAP_TYPE_PNG), 
                                        sub_menu['name'])
@@ -297,15 +307,15 @@ def set_tool_bar(frame):
                                id=sub_menu['id'])
                     add_separator = True
         if add_separator:
-            frame.toolbar.AddSimpleTool(wx.ID_ANY, 
+            frame.tool_bar.AddSimpleTool(wx.ID_ANY, 
                             wx.Bitmap('icons/separator.png', 
                                                    wx.BITMAP_TYPE_PNG), 
                                       '')
-    frame.toolbar.Realize()
+    frame.tool_bar.Realize()
     
     # Set the Sizer for the ToolBar
     vbox = wx.BoxSizer(wx.VERTICAL)
     hbox = wx.BoxSizer(wx.HORIZONTAL)
-    hbox.Add(frame.toolbar, 0, wx.EXPAND)
+    hbox.Add(frame.tool_bar, 0, wx.EXPAND)
     vbox.Add(hbox, 0, flag=wx.EXPAND)
     frame.toolbar_panel.SetSizer(vbox)
