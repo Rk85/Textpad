@@ -24,6 +24,7 @@ class EditMenu(object):
         if self.frame.control.CanCut():
             self.frame.control.Cut()
         self.frame.content_saved = False
+        self.frame.show_status_text(None)
     
     def copy_text(self, event):
         """
@@ -35,6 +36,7 @@ class EditMenu(object):
         """
         if self.frame.control.CanCopy():
             self.frame.control.Copy()
+        self.frame.show_status_text(None)
     
     def paste_text(self, event):
         """
@@ -47,6 +49,7 @@ class EditMenu(object):
         if self.frame.control.CanPaste():
             self.frame.control.Paste()
         self.frame.content_saved = False
+        self.frame.show_status_text(None)
     
     def delete_text(self, event):
         """
@@ -58,6 +61,7 @@ class EditMenu(object):
         select_range = self.frame.control.GetSelection()
         self.frame.control.Remove(select_range[0], select_range[1])
         self.frame.content_saved = False
+        self.frame.show_status_text(None)
     
     def undo_text(self, event):
         """
@@ -79,6 +83,7 @@ class EditMenu(object):
         if self.frame.content_saved:
             self.frame.SetTitle(self.frame.filename + "*")
         self.frame.content_saved = False
+        self.frame.show_status_text(None)
     
     def redo_text(self, event):
         """
@@ -92,6 +97,7 @@ class EditMenu(object):
             self.frame.control.SetInsertionPointEnd()
             #self.frame.text_changed(None)
         self.frame.content_saved = False
+        self.frame.show_status_text(None)
     
     def select_all_text(self, event):
         """
@@ -119,6 +125,7 @@ class EditMenu(object):
                          )
         self.find_replace_register_events(replace_dialog)
         return_value = replace_dialog.ShowModal()
+        self.frame.show_status_text(None)
     
     def find_replace_register_events(self, replace_dialog):
         """

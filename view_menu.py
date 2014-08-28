@@ -39,7 +39,7 @@ class ViewMenu(object):
             self.frame.Layout()
         else:
             self.frame.status_bar.Show()
-            self.frame.show_status_text(event)
+            self.frame.show_status_text(None)
             self.frame.Layout()
     
     def view_font_change(self, event):

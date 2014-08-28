@@ -19,6 +19,7 @@ class Textpad(wx.Frame):
         self.content_saved = True
         self.status_bar = None
         self.tool_bar = None
+        self.icon_dir = "icons/"
         
         self.file_menu = None
         self.edit_menu = None
@@ -37,6 +38,9 @@ class Textpad(wx.Frame):
         sizer.Add(self.toolbar_panel, 0, flag=wx.EXPAND)
         sizer.Add(self.editor_panel, 1, flag=wx.EXPAND|wx.BOTTOM)
         self.SetSizer(sizer)
+        self.SetIcon(wx.Icon(self.icon_dir + 'short_icon.ico', 
+                             wx.BITMAP_TYPE_ICO)
+                    )
         
         self.Show()
         
@@ -139,7 +143,8 @@ class Textpad(wx.Frame):
             start_pos, end_pos = self.control.GetSelection()
             col, line = self.control.PositionToXY(end_pos)
             self.status_bar.SetStatusText("line no :{0}, col no:{1}".format(line+1, col+1))
-        event.Skip()
+        if event:
+            event.Skip()
 
 if __name__ == '__main__':
     app = wx.App()

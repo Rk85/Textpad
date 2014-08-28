@@ -297,7 +297,7 @@ def set_tool_bar(frame):
             for sub_menu in menu_group.get('sub_menus', []):
                 if sub_menu.get('tool_menu'):
                     frame.tool_bar.AddSimpleTool(sub_menu['id'], 
-                                       wx.Bitmap('icons/' + sub_menu['icon_name'], 
+                                       wx.Bitmap(frame.icon_dir + sub_menu['icon_name'], 
                                                    wx.BITMAP_TYPE_PNG), 
                                        sub_menu['name'])
                     frame.Bind(wx.EVT_TOOL, 
@@ -308,7 +308,7 @@ def set_tool_bar(frame):
                     add_separator = True
         if add_separator:
             frame.tool_bar.AddSimpleTool(wx.ID_ANY, 
-                            wx.Bitmap('icons/separator.png', 
+                            wx.Bitmap(frame.icon_dir+'separator.png', 
                                                    wx.BITMAP_TYPE_PNG), 
                                       '')
     frame.tool_bar.Realize()

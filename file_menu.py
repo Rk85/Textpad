@@ -53,6 +53,7 @@ class FileMenu(object):
         self.frame.filename = "New File.txt"
         self.frame.SetTitle(self.frame.filename)
         self.frame.content_saved = True
+        self.frame.show_status_text(None)
         
     def open_file(self, event):
         """
@@ -75,6 +76,7 @@ class FileMenu(object):
         self.frame.SetTitle(self.frame.filename)
         self.frame.update_list = []
         self.frame.redo_list = []
+        self.frame.show_status_text(None)
     
     def save_file(self, event):
         """
