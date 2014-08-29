@@ -17,7 +17,7 @@ class Textpad(wx.Frame):
         self.redo_list = []
         self.max_count = 10
         self.content_saved = True
-        self.icon_dir = "../icons/"
+        self.icon_dir = "icons/"
         
         self.status_bar = None
         self.tool_bar = None

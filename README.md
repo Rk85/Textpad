@@ -1,19 +1,26 @@
 This is a Desktop GUI (Graphical user interface) application in which the user can create/edit/modify any text documents
 
 Requirement:
-	In Non-Windows machine you must have wxPython to compile and to run the application. But in windows you need to have this module only when you need to compile the code. 
+ Windows:
+   To compile the source code you need to have the following package installed in your machine
+	* wxPython
+	* py2exe
+   Once you have the above mentioned modules, just run the build.cmd file to compile the code and create an EXE file
+   
+   If you need just the application and not any source code, then download the compressed file Textpad.rar. This file already has an executable(Textpad.exe) which can be used to run the application
 
-To install the wxpython refer the link http://wiki.wxpython.org/How%20to%20install%20wxPython :
-To install the py2exe refer the link http://www.py2exe.org/old/
+   Once you compiled/downloaded, you can see a file "short_cut.vbs". you can run this file to create an shortcut of the application in the desktop
 
-To Start the application:
-   In non-windows machine start the application as follows
+   To Install Required Modules, refer the following link 
+	for wxpython refer the link http://wiki.wxpython.org/How%20to%20install%20wxPython :
+	for py2exe refer the link http://www.py2exe.org/old/
+  
+  Non-Windows:
+     To compile the source code you need to have the following package installed in your machine
+	* wxPython
+     Once you have the above mentioned module, you can start the appliation with following commands
 	* cd Textpad
-        * python Textpad
+       * python Textpad
 
-   In windows machine:
-	The user can use the executable(Textpad.exe) file present in the dist folder to start the application
-
-To  Compile the code and create executable you require py2exe module in python. once you installed that module	then run the program build.com
 
     
