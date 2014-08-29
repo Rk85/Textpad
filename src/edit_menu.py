@@ -81,7 +81,7 @@ class EditMenu(object):
         )
         self.frame.control.SetInsertionPointEnd()
         if self.frame.content_saved:
-            self.frame.SetTitle(self.frame.filename + "*")
+            self.frame.SetTitle(self.frame.file_name + "*")
         self.frame.content_saved = False
         self.frame.show_status_text(None)
     
@@ -95,7 +95,6 @@ class EditMenu(object):
         if self.frame.redo_list:
             self.frame.control.SetValue(self.frame.redo_list.pop())
             self.frame.control.SetInsertionPointEnd()
-            #self.frame.text_changed(None)
         self.frame.content_saved = False
         self.frame.show_status_text(None)
     

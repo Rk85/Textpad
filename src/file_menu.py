@@ -15,11 +15,11 @@ class FileMenu(object):
         self.frame = frame
         self.default_file_dialog_options = {
             'message': 'Choose a file', 
-            'defaultDir': self.frame.dirname,
+            'defaultDir': self.frame.dir_name,
             'wildcard': '*.*'
         }
     
-    def askUserForFilename(self):
+    def is_file_name_given(self):
         """
             Description: Find whether the user has provided the 
                          file name to access on 
@@ -33,9 +33,9 @@ class FileMenu(object):
         # user has selected a file name
         if dialog.ShowModal() == wx.ID_OK:
             userProvidedFilename = True
-            self.frame.filename = dialog.GetFilename()
-            self.frame.dirname = dialog.GetDirectory()
-            self.frame.SetTitle(self.frame.filename) # Update the window title with the new filename
+            self.frame.file_name = dialog.GetFilename()
+            self.frame.dir_name = dialog.GetDirectory()
+            self.frame.SetTitle(self.frame.file_name) # Update the window title with the new filename
         else:
             userProvidedFilename = False
         dialog.Destroy()
@@ -50,8 +50,8 @@ class FileMenu(object):
 
         """
         self.frame.control.Clear()
-        self.frame.filename = "New File.txt"
-        self.frame.SetTitle(self.frame.filename)
+        self.frame.file_name = "New File.txt"
+        self.frame.SetTitle(self.frame.file_name)
         self.frame.content_saved = True
         self.frame.show_status_text(None)
         
@@ -64,16 +64,18 @@ class FileMenu(object):
         """
         self.default_file_dialog_options.update(
             {
-                'defaultDir': self.frame.dirname,
+                'defaultDir': self.frame.dir_name,
                 'style': wx.FD_OPEN
             }
         )
-        if self.askUserForFilename():
-            with open(os.path.join(self.frame.dirname, self.frame.filename), 'r') as textfile:
+        if self.is_file_name_given():
+            with open(os.path.join(
+                                   self.frame.dir_name, self.frame.file_name), 
+                                   'r') as textfile:
                 self.frame.control.SetValue(textfile.read())
                 textfile.close()
         self.frame.content_saved = True
-        self.frame.SetTitle(self.frame.filename)
+        self.frame.SetTitle(self.frame.file_name)
         self.frame.update_list = []
         self.frame.redo_list = []
         self.frame.show_status_text(None)
@@ -85,10 +87,12 @@ class FileMenu(object):
             input_type: Event instance
             
         """
-        with open(os.path.join(self.frame.dirname, self.frame.filename), 'w') as textfile:
+        with open(os.path.join(
+                               self.frame.dir_name, self.frame.file_name), 
+                               'w') as textfile:
             textfile.write(self.frame.control.GetValue())
             textfile.close()
-        self.frame.SetTitle(self.frame.filename) 
+        self.frame.SetTitle(self.frame.file_name) 
         self.frame.content_saved = True
     
     def save_as_file(self, event):
@@ -101,15 +105,15 @@ class FileMenu(object):
         self.default_file_dialog_options.update(
             {
             'message': 'Choose a file',
-            'defaultDir': self.frame.dirname,
+            'defaultDir': self.frame.dir_name,
             'wildcard': '*.*',
             'style': wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT,
-            'defaultFile': self.frame.filename
+            'defaultFile': self.frame.file_name
             }
         )
-        if self.askUserForFilename():
+        if self.is_file_name_given():
             self.save_file(event)
-            self.frame.SetTitle(self.frame.filename) 
+            self.frame.SetTitle(self.frame.file_name) 
             self.frame.content_saved = True
     
     def exit_program(self, event):

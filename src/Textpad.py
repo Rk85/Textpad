@@ -11,15 +11,16 @@ class Textpad(wx.Frame):
             Description: Initialize the Frame class
         """
         super(Textpad, self).__init__(None, size=(800,400))
-        self.dirname = '.'
-        self.filename = "New File.txt"
+        self.dir_name = '.'
+        self.file_name = "New File.txt"
         self.update_list = []
         self.redo_list = []
         self.max_count = 10
         self.content_saved = True
+        self.icon_dir = "../icons/"
+        
         self.status_bar = None
         self.tool_bar = None
-        self.icon_dir = "icons/"
         
         self.file_menu = None
         self.edit_menu = None
@@ -65,7 +66,7 @@ class Textpad(wx.Frame):
         self.editor_panel.SetSizer(vbox)
         
         self.status_bar = self.CreateStatusBar()
-        self.SetTitle(self.filename)
+        self.SetTitle(self.file_name)
         
     def register_event_callbacks(self):
         """
@@ -118,7 +119,7 @@ class Textpad(wx.Frame):
             if len(self.update_list) > self.max_count:
                 del self.update_list[0]
         else:
-            self.SetTitle(self.filename + "*")
+            self.SetTitle(self.file_name + "*")
             self.content_saved = False
         self.update_list.append(self.control.GetValue())
 
