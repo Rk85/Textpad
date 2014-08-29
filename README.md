@@ -7,7 +7,7 @@ Requirement:
 	* py2exe
    Once you have the above mentioned modules, just run the build.cmd file to compile the code and create an EXE file
    
-   If you need just the application and not any source code, then download the compressed file Textpad.rar. This file already has an executable(Textpad.exe) which can be used to run the application
+   If you need just the application and not any source code, then download the files in the  folder Textpad. This folder already has an executable(Textpad.exe) which can be used to run the application
 
    Once you compiled/downloaded, you can see a file "short_cut.vbs". you can run this file to create an shortcut of the application in the desktop
 
