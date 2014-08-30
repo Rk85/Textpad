@@ -196,7 +196,7 @@ class EditMenu(object):
                 start = self.start_search_index + match.start()
                 end = self.start_search_index + match.end()
                 self.frame.control.SetSelection(start, end)
-                self.start_search_index = self.start_search_index + end
+                self.start_search_index = end
     
     def replace_string(self, max_occurence=0):
         """
