@@ -116,14 +116,14 @@ class EditMenu(object):
         """
         self.start_search_index = 0
         self.replace_data = wx.FindReplaceData()
-        replace_dialog = wx.FindReplaceDialog(self.frame.control,
+        replace_dialog = wx.FindReplaceDialog(self.frame,
                             self.replace_data,
                             'Replace Text',
                             wx.FR_REPLACEDIALOG|
                             wx.FR_NOUPDOWN
                          )
         self.find_replace_register_events(replace_dialog)
-        return_value = replace_dialog.ShowModal()
+        return_value = replace_dialog.Show()
         self.frame.show_status_text(None)
     
     def find_replace_register_events(self, replace_dialog):
@@ -169,7 +169,9 @@ class EditMenu(object):
             self.replace_string()
         elif event.GetEventType() == wx.wxEVT_COMMAND_FIND_CLOSE:
             event.GetDialog().Destroy()
-    
+        else:
+            event.Skip()
+   
     def set_search_string_selected(self, start_index):
         """
             Description: Sets the searching string as selected string 

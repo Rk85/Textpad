@@ -58,7 +58,9 @@ class Textpad(wx.Frame):
         
         # Create a sizer for our editor text area
         hbox = wx.BoxSizer(wx.HORIZONTAL)
-        self.control = wx.TextCtrl(self.editor_panel, style=wx.TE_MULTILINE)
+        self.control = wx.TextCtrl(self.editor_panel,
+                                   style=wx.TE_MULTILINE|
+                                   wx.TE_NOHIDESEL)
         hbox.Add(self.control, 1, flag=wx.EXPAND)
         
         vbox = wx.BoxSizer(wx.VERTICAL)
